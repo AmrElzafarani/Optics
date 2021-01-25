@@ -5,8 +5,8 @@ import { Navbar, Nav, NavItem, Button } from "react-bootstrap";
 class Header extends Component {
   render() {
     return (
-      <Navbar>
-          <Button variant="primary">Primary</Button>{' '}
+      <Navbar className="row">
+          <Button className="ml-auto" variant="primary">Primary</Button>{' '}
 
       </Navbar>
     );
