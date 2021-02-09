@@ -1,16 +1,29 @@
-import React, { Component } from "react";
-import { Navbar, Nav, NavItem, Button } from "react-bootstrap";
-// import '../../../node_modules/bootstrap/dist/css/bootstrap';
+import React from "react";
+import { Navbar, Form, InputGroup, FormControl, Button } from "react-bootstrap";
 
-class Header extends Component {
-  render() {
-    return (
-      <Navbar>
-          <Button variant="primary">Primary</Button>{' '}
-
+function Header() {
+  return (
+    <div>
+      <Navbar className="bg-light justify-content-between">
+        <Form inline>
+          <InputGroup>
+            <InputGroup.Prepend>
+              <InputGroup.Text id="basic-addon1">@</InputGroup.Text>
+            </InputGroup.Prepend>
+            <FormControl
+              placeholder="Username"
+              aria-label="Username"
+              aria-describedby="basic-addon1"
+            />
+          </InputGroup>
+        </Form>
+        <Form inline>
+          <FormControl type="text" placeholder="Search" className=" mr-sm-2" />
+          <Button type="submit">Submit</Button>
+        </Form>
       </Navbar>
-    );
-  }
+    </div>
+  );
 }
 
 export default Header;
