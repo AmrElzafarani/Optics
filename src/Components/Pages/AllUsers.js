@@ -1,33 +1,55 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { useTable } from "react-table";
-import './AllUsers.css';
+import { useTable, useFilters } from "react-table";
+import { Table } from "react-bootstrap";
 
 function AllUsers() {
+  const ColumnFilter = ({ column }) => {
+    const { filterValue, setFilter } = column;
+    return (
+      <span>
+        Search:{" "}
+        <input
+          value={filterValue || ""}
+          onChange={(e) => setFilter(e.target.value)}
+        />
+      </span>
+    );
+  };
+
   const [data, setData] = useState([]);
   useEffect(() => {
     fetch("https://jsonplaceholder.typicode.com/posts")
       .then((response) => response.json())
-      .then((result) => setData(result))
+      .then((result) => setData(result));
   }, []);
   const columns = React.useMemo(
     () => [
       {
         Header: "Id",
         accessor: "id", // accessor is the "key" in the data
+        disableFilters: true
       },
       {
         Header: "First_name",
         accessor: "title",
+        Filter: ColumnFilter
       },
       {
         Header: "Last_name",
         accessor: "body",
+        filterable: false
       },
     ],
     []
   );
 
+  const defaultColumn = React.useMemo(
+    () => ({
+      Filter: ColumnFilter,
+    }),
+    []
+  );
 
   const {
     getTableProps,
@@ -35,11 +57,11 @@ function AllUsers() {
     headerGroups,
     rows,
     prepareRow,
-  } = useTable({ columns, data });
+  } = useTable({ columns, data, defaultColumn }, useFilters);
 
   return (
     // apply the table props
-    <table {...getTableProps()}>
+    <Table striped hover bordered {...getTableProps()}>
       <thead>
         {
           // Loop over the header rows
@@ -55,6 +77,9 @@ function AllUsers() {
                       // Render the header
                       column.render("Header")
                     }
+                    <div>
+                      {column.canFilter ? column.render("Filter") : null}
+                    </div>
                   </th>
                 ))
               }
@@ -91,7 +116,7 @@ function AllUsers() {
           })
         }
       </tbody>
-    </table>
+    </Table>
   );
 }
 
