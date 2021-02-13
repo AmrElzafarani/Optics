@@ -1,10 +1,8 @@
-.sidebar {
-    background-color: #060b26;
-    /* display: flex; */
-    /* justify-content: start; */
+/* .sidebar {
+    background-color: #060b26; 
     align-items: center;
     padding: 1rem;
-  }
+  } */
   
   .menu-bars {
     margin-left: 2rem;
@@ -16,7 +14,6 @@
     background-color: #060b26;
     width: 16rem;
     min-height: 100vh;
-    /* display: flex; */
     justify-content: center;
     transition: 850ms;
   }

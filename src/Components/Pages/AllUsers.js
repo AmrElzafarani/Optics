@@ -38,7 +38,6 @@ function AllUsers() {
       {
         Header: "Last_name",
         accessor: "body",
-        filterable: false
       },
     ],
     []

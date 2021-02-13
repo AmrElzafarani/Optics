@@ -1,13 +1,12 @@
-import React, { Component } from "react";
+import React from 'react';
 
-class Reports extends Component {
-  render() {
-    return (
-      <div>
-        <h1>AMr</h1>
-      </div>
-    );
-  }
+function Reports() {
+  return (
+    <div>
+      
+    </div>
+  )
 }
 
-export default Reports;
+export default Reports
+
