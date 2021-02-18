@@ -1,244 +1,251 @@
-import React, { useState, useEffect } from "react";
+import React, {useState, useEffect, useRef} from "react";
 import PasswordValidation from "./passwordValidation";
-import { Form, Col, Row, Button } from "react-bootstrap";
+import {Form, Col, Row, Button} from "react-bootstrap";
 
 function AddUser() {
-  const [userName, setUserName] = useState("");
-  const [userNameError, setUserNameError] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [confirmPasswordError, setConfirmPasswordError] = useState("");
-  const [roles, setRoles] = useState("");
-  const [email, setEmail] = useState("");
-  const [emailError, setEmailError] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [phoneNumberError, setPhoneNumberError] = useState("");
-  const [disable, setDisabled] = useState(true);
+    const [userName, setUserName] = useState("");
+    const [userNameError, setUserNameError] = useState("");
+    const [password, setPassword] = useState("");
+    const [passwordError, setPasswordError] = useState("");
 
-  const [password, setPassword, passwordError] = PasswordValidation({
-    min: 6,
-    max: 10,
-  });
-  useEffect(() => {
-    const formValidation = () => {
-      if (userName === "") {
-        setUserNameError("Enter User Name");
-      } else {
-        setUserNameError("");
-      }
-      if (!confirmPassword || !password) {
-        setConfirmPasswordError("");
-        // return true
-      } else if (password !== confirmPassword) {
-        setConfirmPasswordError("The passwords must match.");
-        // return true
-      } else {
-        setConfirmPasswordError("");
-      }
-      if (!email) {
-        setEmailError("Enter correct email");
-      } else {
-        setEmailError("");
-      }
-      if (isNaN(phoneNumber)) {
-        setPhoneNumberError("Enter Phone Number");
-      } else {
-        setPhoneNumberError("");
-      }
+    const [confirmPassword, setConfirmPassword] = useState("");
+    const [confirmPasswordError, setConfirmPasswordError] = useState("");
+    const [role, setRole] = useState("");
+    const [roleError, setRoleError] = useState("");
+    // const [email, setEmail] = useState("");
+    // const [emailError, setEmailError] = useState("");
+    const [phoneNumber, setPhoneNumber] = useState('');
+    const [phoneNumberError, setPhoneNumberError] = useState("");
+    const [disable, setDisabled] = useState(true);
+
+    // const [password, setPassword, passwordError] = PasswordValidation({
+    //   min: 6,
+    //   max: 10,
+    //
+    // });
+    const firstRender = useRef(true);
+
+    useEffect(() => {
+
+        if (firstRender.current) {
+            firstRender.current = false
+            return
+        }
+        const formValidation = () => {
+            const validations = [];
+
+            function validateUserName() {
+                if (userName === "") {
+                    setUserNameError("Enter User Name");
+                    return true;
+                } else {
+                    setUserNameError("");
+                    return false;
+
+                }
+            }
+
+            validations.push(validateUserName());
+
+            function validatePassword() {
+                if (password.length < 6) {
+                    setPasswordError("password must be at least 6 characters");
+                    return true;
+
+                }
+                if (password.length > 10) {
+                    setPasswordError(`Password must be less than 10 Characters`);
+                    return true;
+                } else {
+                    setPasswordError("");
+                    return false;
+                }
+            }
+
+            validations.push(validatePassword());
+
+            function validateConfirmPassword() {
+                if (password !== confirmPassword) {
+                    setConfirmPasswordError("Password must match");
+                    return true;
+                } else {
+                    setConfirmPasswordError("");
+                    return false;
+                }
+            }
+
+            validations.push(validateConfirmPassword());
+
+            function validateNumber() {
+                if (!phoneNumber) {
+                    setPhoneNumberError("Enter Phone Number");
+                    return true;
+                } else {
+                    setPhoneNumberError("");
+                    return false;
+                }
+            }
+
+            validations.push(validateNumber());
+
+            function validateRole() {
+                if (!role) {
+                    setRoleError("Select Role");
+                    return true;
+                } else {
+                    setRoleError("");
+                    return false;
+                }
+            }
+
+            validations.push(validateRole());
+
+
+            return allAreValid(validations);
+        };
+        setDisabled(formValidation());
+    }, [userName, password, phoneNumber, confirmPassword, role]);
+
+    function allAreValid(validations) {
+        let status = true;
+        for (const validation of validations) {
+            status &= !validation;
+        }
+
+        return !status;
+    }
+
+    const Submit = (e) => {
+        e.preventDefault();
+
+
+        fetch("https://localhost:44302/api/Users/CreateUser/", {
+            mode: 'no-cors',
+            method: "POST",
+            credentials: "same-origin",
+            body: JSON.stringify([{userName, password, confirmPassword, phoneNumber, role}]),
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+            },
+        })
+            .then((res) => res.text())
+            .then((result) => console.log(result))
+            .catch((err) => console.log(err));
+
+        setUserName("");
+        setPassword("");
+        setConfirmPassword("");
+        setPhoneNumber("");
+        setRole("");
+
+        console.log(userName);
+        console.log(password);
+        console.log(role);
     };
-    setDisabled(formValidation());
-  }, [userName, password, email, phoneNumber, confirmPassword]);
 
-  const Submit = (e) => {
-    e.preventDefault();
 
-    var myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
+    return (
+        <div className="justify-content-center d-flex text-center">
+            <Form className="shadow rounded p-5" onSubmit={Submit}>
+                <h2>Sign Up</h2>
+                <Form.Group as={Row} controlId="name">
+                    <Form.Label column sm={4}>
+                        Name
+                    </Form.Label>
+                    <Col md={8}>
+                        <Form.Control
+                            type="text"
+                            placeholder="user Name"
+                            name="name"
+                            value={userName}
+                            onChange={(e) => setUserName(e.target.value)}
+                            autoComplete="true"
+                        />
+                        <div className="error">{userNameError}</div>
+                    </Col>
+                </Form.Group>
 
-    var raw = JSON.stringify([
-      {
-        userName: userName,
-        password: password,
-        confirmPassword: confirmPassword,
-        email: email,
-        phoneNumber: phoneNumber,
-        roles: [{ roleId: "1" }],
-      },
-    ]);
+                <Form.Group as={Row} controlId="password">
+                    <Form.Label column sm={4}>
+                        Password
+                    </Form.Label>
+                    <Col md={8}>
+                        <Form.Control
+                            type="password"
+                            placeholder="Password"
+                            name="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            autoComplete="true"
+                        />
+                        <div className="error">{passwordError}</div>
 
-    var requestOptions = {
-      mode: "no-cors",
-      method: "POST",
-      headers: myHeaders,
-      body: raw,
-      redirect: "follow",
-    };
+                    </Col>
 
-    fetch("https://localhost:44302/api/Users/CreateUser/", requestOptions)
-      .then((response) => response.text())
-      .then((result) => {
-        console.log(result);
-      })
-      .catch((error) => console.log("error", error));
-    // fetch("https://localhost:44302/api/Users/CreateUser/", {
-    //   mode: 'no-cors',
-    //   method: "POST",
-    //   credentials: "same-origin",
-    //   body: JSON.stringify([{ userName, password, confirmPassword, email,phoneNumber, role }]),
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //     "Accept": "application/json",
-    //   },
-    // })
-    //   .then((res) => res.text())
-    //   .then((result) => console.log(result) )
-    //   .catch((err) => console.log(err));
+                </Form.Group>
 
-    setUserName("");
-    setPassword("");
-    setConfirmPassword("");
-    setEmail("");
-    setPhoneNumber("");
+                <Form.Group as={Row} controlId="confirmPassword">
+                    <Form.Label column sm={6} md={4}>
+                        Confirm Password
+                    </Form.Label>
+                    <Col md={8}>
+                        <Form.Control
+                            type="password"
+                            placeholder="confirm Password"
+                            name="confirmPassword"
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                            autoComplete="true"
+                        />
+                        <div className="error">{confirmPasswordError}</div>
+                    </Col>
+                </Form.Group>
 
-    // console.log(userName);
-    // console.log(password);
-    // console.log(role);
-  };
+                <Form.Group as={Row} controlId="phone">
+                    <Form.Label column sm={4}>
+                        Mobile NO.
+                    </Form.Label>
+                    <Col md={8}>
+                        <Form.Control
+                            type="text"
+                            placeholder="Mobile NO."
+                            name="phoneNumber"
+                            value={phoneNumber}
+                            onChange={(e) => setPhoneNumber(e.target.value)}
+                            autoComplete="true"
+                        />
+                        <div className="error">{phoneNumberError}</div>
+                    </Col>
+                </Form.Group>
 
-  // useEffect(() => {
-  //   console.log("name");
-  //   if (userName) {
-  //     setNameError("");
-  //   } else {
-  //     setNameError("Enter User Name");
-  //   }
-  // }, [userName]);
+                <Form.Group as={Row} controlId="Role">
+                    <Form.Label column sm={4}>
+                        Role Type
+                    </Form.Label>
+                    <Col md={8}>
+                        <Form.Control
+                            as="select"
+                            value={role}
+                            onChange={(e) => setRole(e.target.value)}
+                        >
+                            <option value="Admin">Admin</option>
+                            <option value="User">User</option>
+                        </Form.Control>
+                        <h4>You selected {role}</h4>
+                    </Col>
+                </Form.Group>
 
-  // useEffect(() => {
-  //   console.log("password");
-  //   if (!confirmPassword || !password) {
-  //     setConfirmPasswordError("");
-  //   } else if (password !== confirmPassword) {
-  //     setConfirmPasswordError("The passwords must match.");
-  //   } else {
-  //     setConfirmPasswordError("");
-  //   }
-  // }, [password, confirmPassword]);
-
-  return (
-    <div>
-        <Form onSubmit={Submit}>
-          <Form.Group as={Row} controlId="name">
-            <Form.Label column sm={2}>
-              Name
-            </Form.Label>
-            <Col sm={6}>
-              <Form.Control
-                type="text"
-                placeholder="user Name"
-                name="name"
-                value={userName}
-                onChange={(e) => setUserName(e.target.value)}
-                autoComplete="true"
-              />
-              <div className="error">{userNameError}</div>
-            </Col>
-          </Form.Group>
-
-          <Form.Group as={Row} controlId="password">
-            <Form.Label column sm={2}>
-              Password
-            </Form.Label>
-            <Col sm={6}>
-              <Form.Control
-                type="password"
-                placeholder="Password"
-                name="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                autoComplete="true"
-              />
-              <div className="error">{passwordError}</div>
-            </Col>
-          </Form.Group>
-
-          <Form.Group as={Row} controlId="confirmPassword">
-            <Form.Label column sm={2}>
-              Confirm Password
-            </Form.Label>
-            <Col sm={6}>
-              <Form.Control
-                type="password"
-                placeholder="confirm Password"
-                name="confirmPassword"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                autoComplete="true"
-              />
-              <div className="error">{confirmPasswordError}</div>
-            </Col>
-          </Form.Group>
-
-          <Form.Group as={Row} controlId="email">
-            <Form.Label column sm={2}>
-              Email
-            </Form.Label>
-            <Col sm={6}>
-              <Form.Control
-                type="email"
-                placeholder="Email"
-                name="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                autoComplete="true"
-              />
-              <div className="error">{emailError}</div>
-            </Col>
-          </Form.Group>
-
-          <Form.Group as={Row} controlId="phone">
-            <Form.Label column sm={2}>
-              Mobile NO.
-            </Form.Label>
-            <Col sm={6}>
-              <Form.Control
-                type="number"
-                placeholder="Mobile NO."
-                name="phoneNumber"
-                value={phoneNumber}
-                onChange={(e) => setPhoneNumber(e.target.value)}
-                autoComplete="true"
-              />
-              <div className="error">{phoneNumberError}</div>
-            </Col>
-          </Form.Group>
-
-          <Form.Group as={Row} controlId="Role">
-            <Form.Label column sm={2}>
-              Role Type
-            </Form.Label>
-            <Col sm={6}>
-              <Form.Control
-                as="select"
-                value={roles}
-                onChange={(e) => setRoles(e.target.value)}
-              >
-                <option value="Admin">Admin</option>
-                <option value="User">User</option>
-              </Form.Control>
-              <h4>You selected {roles}</h4>
-            </Col>
-          </Form.Group>
-
-          <Form.Group as={Row}>
-            <Col sm={{ span: 10, offset: 4 }}>
-              <Button type="submit" disabled={disable}>
-                Submit
-              </Button>
-            </Col>
-          </Form.Group>
-        </Form>
-    </div>
-  );
+                <Form.Group as={Row}>
+                    <Col sm={{span: 10, offset: 4}}>
+                        <Button type="submit" disabled={disable}>
+                            Submit
+                        </Button>
+                    </Col>
+                </Form.Group>
+            </Form>
+        </div>
+    );
 }
 
 export default AddUser;
