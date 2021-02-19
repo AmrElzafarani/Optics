@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Reports from "./Components/Layout/Reports";
 import SideDrawer from "./Components/Layout/SideDrawer";
@@ -8,14 +8,19 @@ import AddUser from "./Components/Pages/AddUser";
 import Layout from "./Components/Layout/Layout";
 
 function App() {
+
+  const [sidebar, setSidebar] = useState(false);
+  //toggle sidenav
+  const showSidebar = () => {
+    return setSidebar(!sidebar);
+  };
   return (
     <>
-      {/* <div className="d-flex"> */}
-      <Header />
+      <Header showSidebar={showSidebar}/>
 
       <Router>
         <div className="d-flex">
-          <SideDrawer />
+          <SideDrawer sidebar={sidebar}/>
 
           {/* <Layout /> */}
           <div className="page-content">
@@ -27,7 +32,8 @@ function App() {
           </div>
         </div>
       </Router>
-      {/* </div> */}
+      <Reports age="26" />
+       {/*</div>*/}
     </>
   );
 }

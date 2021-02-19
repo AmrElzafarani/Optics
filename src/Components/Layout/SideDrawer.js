@@ -1,27 +1,20 @@
 import React, { useState } from "react";
 import { FaBars, FaTemperatureHigh } from "react-icons/fa";
 import { Button, Nav } from "react-bootstrap";
-import Header from './Header';
+import Header from "./Header";
 
 import { SidebarData } from "./SidebarData";
 import "./SideDrawer.css";
 
 import { Link } from "react-router-dom";
 
-const SideDrawer = () => {
-  const [sidebar, setSidebar] = useState(false);
-  //toggle sidenav
-  const showSidebar = () => { setSidebar(!sidebar)};
-  return (
-    <>
-       {/* <div className="sidebar">
-        <Button className="menu-bars" onClick={showSidebar}>
-        </Button>
-      </div>  */}
-      
+const SideDrawer = (props) => {
 
-      <Nav className={sidebar ? "nav-menu active" : "nav-menu"}>
-        <ul className="nav-menu-items">
+  return (
+
+    <>
+        <Nav >
+            <ul className={props.sidebar ? "nav-menu active" : "nav-menu"}>
           {SidebarData.map((item, index) => {
             return (
               <li key={index} className={item.cName}>
@@ -34,9 +27,9 @@ const SideDrawer = () => {
           })}
         </ul>
       </Nav>
-      
     </>
   );
 };
 
 export default SideDrawer;
+
