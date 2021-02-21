@@ -1,10 +1,9 @@
-import React, {useState} from "react";
+import React from "react";
 import {FaBars} from "react-icons/fa";
 
-import {Navbar, Form, InputGroup, FormControl, Button, Nav} from "react-bootstrap";
-import showSidebar from "./SideDrawer";
+import {Navbar, Form, Button} from "react-bootstrap";
 
-import "../Layout/SideDrawer.css";
+import "./SideDrawer.css";
 
 
 const Header = (props) => {
@@ -13,12 +12,10 @@ const Header = (props) => {
     return (
         <div>
             <Navbar className="bg-light justify-content-between">
-                    <FaBars className="menu-bars" onClick={props.showSidebar}/>
+                    <Button>
+                        <FaBars className="menu-bars" onClick={props.showSidebar}/>
+                    </Button>
                 <Form inline className="bg-light justify-content">
-
-
-
-
 
                     <Button type="submit">Submit</Button>
                 </Form>

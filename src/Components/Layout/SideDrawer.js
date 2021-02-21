@@ -1,7 +1,5 @@
-import React, { useState } from "react";
-import { FaBars, FaTemperatureHigh } from "react-icons/fa";
-import { Button, Nav } from "react-bootstrap";
-import Header from "./Header";
+import React from "react";
+import { Nav } from "react-bootstrap";
 
 import { SidebarData } from "./SidebarData";
 import "./SideDrawer.css";
@@ -14,6 +12,7 @@ const SideDrawer = (props) => {
 
     <>
         <Nav >
+
             <ul className={props.sidebar ? "nav-menu active" : "nav-menu"}>
           {SidebarData.map((item, index) => {
             return (
