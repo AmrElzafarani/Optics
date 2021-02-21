@@ -9,29 +9,24 @@ import AddUser from "../Pages/AddUser";
 const Layout = () => {
 
     const [sidebar, setSidebar] = useState(false);
-    const [mobileView, setMobileView] = useState(true);
 
     const showSidebar = () => {
         setSidebar(!sidebar);
     };
-    // const mobileView = () => {
-    //     (true);
-    // }
 
     const viewState = () => {
         if (document.documentElement.clientWidth < 600) {
-            console.log("mobile view");
             setSidebar(true);
-            setMobileView(false);
         } else if (document.documentElement.clientWidth > 600) {
             setSidebar(false);
-            setMobileView(true);
 
         }
     }
 
     useEffect(() => {
-        // viewState();
+
+        //Hide sidebar on small devices in first render
+        viewState();
         return  window.addEventListener("resize", viewState);
 
 
