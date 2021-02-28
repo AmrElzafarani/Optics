@@ -1,16 +1,28 @@
-import React, { Component } from "react";
-import { Navbar, Nav, NavItem, Button } from "react-bootstrap";
-// import '../../../node_modules/bootstrap/dist/css/bootstrap';
+import React from "react";
+import {FaBars} from "react-icons/fa";
 
-class Header extends Component {
-  render() {
-    return (
-      <Navbar className="row">
-          <Button className="ml-auto" variant="primary">Primary</Button>{' '}
+import {Navbar, Form, Button} from "react-bootstrap";
 
-      </Navbar>
-    );
-  }
-}
+import "./SideDrawer.css";
+
+
+const Header = (props) => {
+
+
+  return (
+      <div>
+        <Navbar className="bg-light justify-content-between">
+          <Button onClick={props.showSidebar}>
+            <FaBars />
+          </Button>
+          <Form inline className="bg-light justify-content">
+
+            <Button type="submit">Submit</Button>
+          </Form>
+        </Navbar>
+      </div>
+
+  );
+};
 
 export default Header;
