@@ -24,6 +24,8 @@ function AddUser(props) {
     const [phoneNumber, setPhoneNumber] = useState('');
     const [phoneNumberError, setPhoneNumberError] = useState("");
     const [disable, setDisabled] = useState(true);
+
+    const [roleType,setRoleType] = useState("");
     languageSwitcher(props);
 
     const firstRender = useRef(true);
@@ -112,8 +114,10 @@ function AddUser(props) {
     useEffect(() => {
         fetch("https://localhost:44302/api/Roles/GetRoles")
             .then((response) => response.json())
-            .then((result) => setRole(result.data));
+            .then((result) => setRole(result.data))
     }, []);
+    console.log(roles);
+
 
     function allAreValid(validations) {
         let status = true;
@@ -144,22 +148,17 @@ function AddUser(props) {
                 "Content-Type": "application/json; charset=UTF-8"
             },
         })
-            .then((res) => res.json())
+            .then((response) => response.json())
             .then((result) => {
-                console.log((result));
+                return ((result));
             });
-        // .catch((err) => console.log("error" + err));
 
         setUserName("");
         setPassword("");
         setConfirmPassword("");
         setPhoneNumber("");
-        // setRole([]);
 
-        // console.log(userName);
-        // console.log(password);
-        // console.log(roles);
-    };
+    }
 
 
     return (
@@ -287,11 +286,11 @@ function AddUser(props) {
 
                             <Form.Control
                                 as="select"
-                                value={roles}
-                                onChange={(e) => setRole([{roles: e.target.value}])}
+                                value={roleType}
+                                onChange={(e) => setRoleType( e.target.value)}
                                 custom
                             >
-                                {roles.map((value,i) => <option defaultValue="Choose" key={i} value={value.id}>{value.name}</option>)}
+                                {roles.map((value,index) => <option key={index} value={value.id}>{value.name}</option>)}
                             </Form.Control>
                         </InputGroup>
                         <div className="error">{roleError}</div>
