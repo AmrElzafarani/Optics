@@ -1,17 +1,15 @@
-import React, { Component } from 'react';
-import Header from './Components/Layout/Header';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import React from "react";
 
+import Layout from "./Components/Layout/Layout";
 
+function App() {
 
-class App extends Component {
-  render() {
-    return (
-      <div>
-        <Header />
-      </div>
-    );
-  }
+  
+  return (
+    <>
+      <Layout/>
+    </>
+  );
 }
 
 export default App;
