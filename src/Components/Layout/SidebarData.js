@@ -3,21 +3,21 @@ import * as FaIcons from "react-icons/fa";
 import * as AiIcons from "react-icons/ai";
 import * as IoIcons from "react-icons/io";
 
-export const users =
-    [
-      {
-        title: "All-Users",
-        path: "/All-Users",
-        icon: <FaIcons.FaCartPlus />,
-        cName: "nav-text",
-      },
-      {
-        title: "Add-User",
-        path: "/Add-User",
-        icon: <IoIcons.IoMdPeople />,
-        cName: "nav-text",
-      }
-    ]
+// export const users =
+//     [
+//       {
+//         title: "All-Users",
+//         path: "/All-Users",
+//         icon: <FaIcons.FaCartPlus />,
+//         cName: "nav-text",
+//       },
+//       {
+//         title: "Add-User",
+//         path: "/Add-User",
+//         icon: <IoIcons.IoMdPeople />,
+//         cName: "nav-text",
+//       }
+//     ]
 
 export const SidebarData = [
 
@@ -28,8 +28,8 @@ export const SidebarData = [
     cName: "nav-text",
   },
   {
-    title: "Reports",
-    path: "/reports",
+    title: "Add",
+    path: "/Add",
     icon: <IoIcons.IoIosPaper />,
     cName: "nav-text",
 
@@ -58,12 +58,18 @@ export const SidebarData = [
     icon: <IoIcons.IoMdHelpCircle />,
     cName: "nav-text",
   },
-
-  // {
-  //   title : "Users",
-  //   icon:<IoIcons.IoMdHelpCircle />,
-  //   cName:"nav-text"
-  // }
+  {
+    title: "CreateOrder",
+    path: "/Bill",
+    icon: <IoIcons.IoMdHelpCircle />,
+    cName: "nav-text",
+  },
+  {
+    title: "AllOrders",
+    path: "/All-Orders",
+    icon: <FaIcons.FaEnvelopeOpenText />,
+    cName: "nav-text",
+  },
 
 
 ];

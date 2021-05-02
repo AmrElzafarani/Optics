@@ -6,9 +6,9 @@ function App() {
 
   
   return (
-    <>
+    <React.StrictMode>
       <Layout/>
-    </>
+    </React.StrictMode>
   );
 }
 

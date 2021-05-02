@@ -6,27 +6,22 @@ import {
     IoIosArrowDropdownCircle,
     RiLockPasswordFill
 } from "react-icons/all";
-import languageSwitcher from "../../Utilities/LanguageSwitcher";
 
 
-function AddUser(props) {
+function AddUser() {
     const [userName, setUserName] = useState("");
     const [userNameError, setUserNameError] = useState("");
     const [password, setPassword] = useState("");
     const [passwordError, setPasswordError] = useState("");
-
     const [confirmPassword, setConfirmPassword] = useState("");
     const [confirmPasswordError, setConfirmPasswordError] = useState("");
     const [email, setEmail] = useState("moh.mourad9519@gmail.com");
-    const [roles, setRole] = useState([]);
-
+    const [role, setRole] = useState("");
+    const [roleTypes, setRoleTypes] = useState([]);
     const [roleError, setRoleError] = useState("");
     const [phoneNumber, setPhoneNumber] = useState('');
     const [phoneNumberError, setPhoneNumberError] = useState("");
     const [disable, setDisabled] = useState(true);
-
-    const [roleType,setRoleType] = useState("");
-    languageSwitcher(props);
 
     const firstRender = useRef(true);
 
@@ -94,7 +89,7 @@ function AddUser(props) {
             validations.push(validateNumber());
 
             function validateRole() {
-                if (roles.length === 0) {
+                if (roleTypes.length === 0) {
                     setRoleError("Select Role");
                     return true;
                 } else {
@@ -109,14 +104,29 @@ function AddUser(props) {
             return allAreValid(validations);
         };
         setDisabled(formValidation());
-    }, [userName, password, phoneNumber, confirmPassword, roles]);
+    }, [userName, password, phoneNumber, confirmPassword, roleTypes]);
+
+    const mountedRef = useRef(false);
+
+    // effect just for tracking mounted state
+    useEffect(() => {
+        mountedRef.current = true
+        return () => {
+            mountedRef.current = false
+        }
+    }, [])
 
     useEffect(() => {
         fetch("https://localhost:44302/api/Roles/GetRoles")
+
             .then((response) => response.json())
-            .then((result) => setRole(result.data))
+            .then((result) => {
+                if (mountedRef.current) {
+                    setRoleTypes(result.data)
+                }
+            })
+
     }, []);
-    console.log(roles);
 
 
     function allAreValid(validations) {
@@ -128,6 +138,7 @@ function AddUser(props) {
         return !status;
     }
 
+
     const Submit = (e) => {
         e.preventDefault();
         let payload = {
@@ -136,11 +147,13 @@ function AddUser(props) {
             confirmPassword,
             email,
             phoneNumber,
-            roles
+            roles: [
+                {
+                    roleId: role
+                }
+            ]
         };
 
-        console.log(payload);
-        console.log("fetch called");
         fetch("https://localhost:44302/api/Users/CreateUser/", {
             method: "POST",
             body: JSON.stringify(payload),
@@ -149,9 +162,8 @@ function AddUser(props) {
             },
         })
             .then((response) => response.json())
-            .then((result) => {
-                return ((result));
-            });
+            .then((result) => ((result)))
+
 
         setUserName("");
         setPassword("");
@@ -285,12 +297,19 @@ function AddUser(props) {
                             </InputGroup.Prepend>
 
                             <Form.Control
+
                                 as="select"
-                                value={roleType}
-                                onChange={(e) => setRoleType( e.target.value)}
-                                custom
-                            >
-                                {roles.map((value,index) => <option key={index} value={value.id}>{value.name}</option>)}
+                                value={role}
+                                onChange={(e) => setRole(e.target.value)}>
+
+                                <option value="">Role Type</option>
+                                {roleTypes.map((value, index) =>
+                                    <option key={index}
+                                            value={value.id}>
+                                        {value.name}
+
+                                    </option>
+                                )}
                             </Form.Control>
                         </InputGroup>
                         <div className="error">{roleError}</div>

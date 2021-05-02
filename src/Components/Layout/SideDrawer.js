@@ -12,7 +12,7 @@ const SideDrawer = (props) => {
   return (
 
     <>
-        <Nav >
+        <Nav className="justify-content-center">
 
             <ul className={props.sidebar ? "nav-menu active" : "nav-menu"}>
                 <h2>Iconic</h2>
